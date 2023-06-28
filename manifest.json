@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "蓝湖复制代码 to windicss",
+    "version": "1.0",
+    "description": "A browser extension to listen for clipboard events.",
+    "options_page": "option.html",
+    "permissions": [
+        "clipboardRead",
+        "clipboardWrite",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "./dist/index.js"
+            ]
+        }
+    ]
+}
