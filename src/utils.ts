@@ -154,3 +154,26 @@ export function joinEmpty(str: string) {
         .replace(/\s*\)/g, ')')
         .replace(/\s*,\s*/g, ',');
 }
+// 轮询
+export function poll(fn: Function, timeout: number, interval: number) {
+    var endTime = Number(new Date()) + (timeout || 2000);
+    interval = interval || 100;
+
+    var checkCondition = function (resolve: (arg0: HTMLElement) => void, reject: (arg0: Error) => void) {
+        // 如果条件满足，我们的promise会解析并完成
+        const dom = fn();
+        if (dom) {
+            resolve(dom);
+        }
+        // 如果条件不满足，但是超时时间还没到，再次轮询
+        else if (Number(new Date()) < endTime) {
+            setTimeout(checkCondition, interval, resolve, reject);
+        }
+        // 如果条件不满足，并且已经超时，我们的promise会被拒绝
+        else {
+            reject(new Error(`timed out for ${fn}: ${arguments}`));
+        }
+    };
+
+    return new Promise(checkCondition);
+}

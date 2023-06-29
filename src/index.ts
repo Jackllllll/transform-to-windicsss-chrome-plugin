@@ -1,6 +1,15 @@
 import {toUnocss, splitReg} from './toUnocss';
 import {IGNORE_TYPE} from './constant';
+import {poll} from './utils';
 
+const button = '<button id="to-windicss">复制 windicss</button>';
+const buttonStyles = {
+    background: '#2878ff',
+    fontSize: '20px',
+    padding: '0 16px',
+    borderRadius: '30px',
+    color: '#fff'
+};
 function getSplitArray(str: string): string[] {
     if (!str) {
         return [];
@@ -47,11 +56,11 @@ function transformTowindicss(text: string) {
 
     return windicssGroup.join(' ');
 }
-async function handleClipboardEvent() {
+async function handleClipboardEvent(text: string) {
     try {
-        const text = await navigator.clipboard.readText();
-        console.log('css:', text);
-        const windicssText = transformTowindicss(text as string);
+        const textCopyValue = text ?? await navigator.clipboard.readText();
+        console.log('css:', textCopyValue);
+        const windicssText = transformTowindicss(textCopyValue as string);
         await writeText(windicssText);
         console.log('windicss:', windicssText);
     } catch (err) {
@@ -59,7 +68,20 @@ async function handleClipboardEvent() {
     }
 }
 
+function handleCopyText() {
+    const text = (document.querySelector('.language-css') as HTMLElement)?.innerText;
+    handleClipboardEvent(text);
 
-document.addEventListener('copy', () => {
-    handleClipboardEvent();
+}
+// 找到 operation-center ,然后插入 复制按钮
+poll(function () {
+    return document.querySelector('.operation-center');
+}, 10000, 150).then(function (res) {
+    res.insertAdjacentHTML('afterend', button);
+    const butElement = document.querySelector('#to-windicss') as HTMLElement;
+    butElement?.addEventListener('click', handleCopyText);
+    Object.assign(butElement?.style, buttonStyles);
 });
+// document.addEventListener('copy', () => {
+//     handleClipboardEvent();
+// });
