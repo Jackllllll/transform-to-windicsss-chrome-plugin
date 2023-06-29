@@ -7,6 +7,7 @@ import {opacity} from './transform/opacity';
 import {text} from './transform/text';
 import {background} from './transform/background';
 import {border} from './transform/border';
+import {backdrop} from './transform/backdrop';
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,7 +20,8 @@ const typeMap: any = {
     opacity,
     text,
     background,
-    border
+    border,
+    backdrop
 };
 // eslint-disable-next-line no-useless-escape
 export const splitReg = /([\w-]+)\s*:\s*([.\w\(\)-\s%+'",#\/!]+)/;
