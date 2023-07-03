@@ -13,6 +13,10 @@ export const buttonStyles = {
     marginLeft: '20px'
 };
 // 插件作用域名列表
-export const hostList = [
+export const HOST_LIST = [
     'lanhuapp.com'
+];
+
+export const IGNORE_TYPE = [
+    'font-family'
 ];

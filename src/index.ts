@@ -1,6 +1,5 @@
 import {toUnocss, splitReg} from './toUnocss';
-import {IGNORE_TYPE} from './constant';
-import {button, buttonStyles, hostList, selector} from './config';
+import {button, buttonStyles, HOST_LIST, selector, IGNORE_TYPE} from './config';
 
 function getSplitArray(str: string): string[] {
     if (!str) {
@@ -90,7 +89,7 @@ function startObserving() {
 }
 function initPlugin() {
     const host = window.location.host;
-    if (hostList.includes(host)) {
+    if (HOST_LIST.includes(host)) {
         // 监听页面
         startObserving();
     }
