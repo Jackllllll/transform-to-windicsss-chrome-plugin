@@ -1,15 +1,7 @@
 import {toUnocss, splitReg} from './toUnocss';
 import {IGNORE_TYPE} from './constant';
-import {poll} from './utils';
+import {button, buttonStyles, hostList, selector} from './config';
 
-const button = '<button id="to-windicss">复制 windicss</button>';
-const buttonStyles = {
-    background: '#2878ff',
-    fontSize: '20px',
-    padding: '0 16px',
-    borderRadius: '30px',
-    color: '#fff'
-};
 function getSplitArray(str: string): string[] {
     if (!str) {
         return [];
@@ -73,15 +65,35 @@ function handleCopyText() {
     handleClipboardEvent(text);
 
 }
-// 找到 operation-center ,然后插入 复制按钮
-poll(function () {
-    return document.querySelector('.operation-center');
-}, 10000, 150).then(function (res) {
-    res.insertAdjacentHTML('afterend', button);
-    const butElement = document.querySelector('#to-windicss') as HTMLElement;
-    butElement?.addEventListener('click', handleCopyText);
-    Object.assign(butElement?.style, buttonStyles);
-});
-// document.addEventListener('copy', () => {
-//     handleClipboardEvent();
-// });
+
+function insertWindicssButton(copyButton: Element) {
+    copyButton.insertAdjacentHTML('beforebegin', button);
+    const windButtonElement = document.querySelector(`#${selector}`) as HTMLElement;
+    windButtonElement?.addEventListener('click', handleCopyText);
+    Object.assign(windButtonElement?.style, buttonStyles);
+}
+function startObserving() {
+    const observer = new MutationObserver((mutationsList: MutationRecord[]) => {
+        for (const mutation of mutationsList) {
+            const copyButton = document.querySelector('#copy_code');
+            if (mutation.type === 'childList' && copyButton && !document.querySelector(`#${selector}`)) {
+                // 找到蓝湖 copyButton，插入复制 windicss 按钮
+                insertWindicssButton(copyButton);
+            }
+        }
+
+
+    });
+
+    const config = {childList: true, subtree: true};
+    observer.observe(document.body, config);
+}
+function initPlugin() {
+    const host = window.location.host;
+    if (hostList.includes(host)) {
+        // 监听页面
+        startObserving();
+    }
+}
+initPlugin();
+

@@ -10,7 +10,7 @@ const borderSize = [
     'border-left',
     'border-top',
     'border-right',
-    'border-bottom',
+    'border-bottom'
 ];
 export function border(key: string, val: string) {
     // eslint-disable-next-line prefer-const
@@ -24,7 +24,7 @@ export function border(key: string, val: string) {
     if (key === 'border-radius') {
         return isCalc(value) || !value.includes(' ')
             ? `border-rd${getVal(value)}${important}`
-            : `border-rd="[${joinWithUnderLine(value)}]${important}"`;
+            : `border-rd-[${joinWithUnderLine(value)}]${important}`;
     }
 
     if (borderSize.some(b => key.startsWith(b)))
@@ -50,6 +50,6 @@ export function border(key: string, val: string) {
             all.replace(v, trim(v, 'all')),
         );
     }
-
-    return `border="[${joinWithUnderLine(value)}]${important}"`;
+    const splitBoder =  value.replace(/\s+/, ' ').split(' ');
+    return `border-[${splitBoder[0]}]${important} border-[${splitBoder[1]}]${important} border-[${splitBoder[2]}]${important}`;
 }

@@ -1,5 +1,6 @@
 import {getVal, isRgb, transformImportant, trim} from '../utils';
 
+
 const backgroundMap = [
     'background-color',
     'background-size',
@@ -7,12 +8,15 @@ const backgroundMap = [
     'background-position',
     'background-image',
 ];
+const linearGradientRegOnly = /linear-gradient/;
 const linearGradientReg = /linear-gradient\(\s*to([\w\s]+),?([\w\(\)#%\s\.]+)?,([\w\(\)#%\s\.]+)?,?([\w#%\s\.]+)?\)$/;
 
 const otherGradientReg = /(radial|conic)-gradient\(([\w\(\)#%\s\.]+)?,([\w\(\)#%\s\.]+)?,?([\w#%\s\.]+)?\)$/;
 const commaReplacer = /[__comma__]+/g;
+
+export const linearGradientAleat = 'unocss 目前无没有完全等效的 linear-gradient incalss 设置,请使用 css 其他方法实现';
 // eslint-disable-next-line sonarjs/cognitive-complexity
-function getLinearGradientPosition(from: string, via: string, to: string) {
+export function getLinearGradientPosition(from: string, via: string, to: string) {
     let result = '';
     if (via && !to) {
         to = via;
@@ -74,8 +78,8 @@ function getLinearGradientPosition(from: string, via: string, to: string) {
     return result;
 }
 
-function transformSpaceToLine(s: string) {
-    return s.replace(/\s+/, ' ').replace(' ', '-');
+export function transformSpaceToLine(s: string) {
+    return s.replace(/\s+/g, '-');
 }
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function background(key: string, val: string) {
@@ -90,26 +94,30 @@ export function background(key: string, val: string) {
             const newValue = value.replace(/rgba?\(([\w\s,]+)\)/g, (all, v) =>
                 all.replace(v, v.replace(/\s*,\s*/g, commaReplacer)),
             );
-
+            const matchs = newValue.match(linearGradientRegOnly);
             const matcher = newValue.match(linearGradientReg);
+            if (matchs) {
+                console.log(linearGradientAleat);
+                return;
+            }
             if (!matcher)
                 return;
 
             // eslint-disable-next-line prefer-const
-            let [direction, from, via, to] = matcher.slice(1);
+            // let [direction, from, via, to] = matcher.slice(1);
 
-            direction = trim(direction, 'around')
-                .split(' ')
-                .map(item => item[0])
-                .join('');
+            // direction = trim(direction, 'around')
+            //     .split(' ')
+            //     .map(item => item[0])
+            //     .join('');
 
-            return direction
-                ? `bg-gradient-to-${direction}${getLinearGradientPosition(
-                    from,
-                    via,
-                    to,
-                )}`
-                : getLinearGradientPosition(from, via, to);
+            // return direction
+            //     ? `bg-gradient-to-${direction}${getLinearGradientPosition(
+            //         from,
+            //         via,
+            //         to,
+            //     )}`
+            //     : getLinearGradientPosition(from, via, to);
         }
         else if (/(radial|conic)-gradient/.test(value)) {
             // 区分rgba中的,和linear-gradient中的,
