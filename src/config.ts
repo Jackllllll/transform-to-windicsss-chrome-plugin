@@ -9,7 +9,8 @@ export const buttonStyles = {
     color: '#2878ff',
     fontWeight: 500,
     fontSize: '14px',
-    lineHeight: '32px'
+    lineHeight: '32px',
+    marginLeft: '20px'
 };
 // 插件作用域名列表
 export const hostList = [
